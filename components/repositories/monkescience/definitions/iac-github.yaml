@@ -1,1 +1,5 @@
 visibility: public
+
+branch_protection:
+  required_status_checks:
+    - "lint (repositories, monkescience)"
