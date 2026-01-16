@@ -51,6 +51,7 @@ func (Tofu) Plan() error {
 		"-chdir="+owner,
 		"plan",
 		"-out=terraform.tfplan",
+		"-var=owner="+owner,
 	)
 }
 
@@ -64,6 +65,7 @@ func (Tofu) Plandestroy() error {
 		"-chdir="+owner,
 		"plan",
 		"-out=terraform.tfplan",
+		"-var=owner="+owner,
 		"-destroy",
 	)
 }
