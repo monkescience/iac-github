@@ -3,6 +3,7 @@ package github
 import (
 	"iac-github/libraries/mageutil"
 	"os"
+	"path/filepath"
 
 	"github.com/magefile/mage/mg"
 	"github.com/magefile/mage/sh"
@@ -50,7 +51,6 @@ func (Tofu) Plan() error {
 		"-chdir="+owner,
 		"plan",
 		"-out=terraform.tfplan",
-		"-var=owner="+owner,
 	)
 }
 
@@ -64,7 +64,6 @@ func (Tofu) Plandestroy() error {
 		"-chdir="+owner,
 		"plan",
 		"-out=terraform.tfplan",
-		"-var=owner="+owner,
 		"-destroy",
 	)
 }
@@ -94,4 +93,25 @@ func (Tofu) Apply() error {
 // Fmt formats the terraform files.
 func (Tofu) Fmt() error {
 	return sh.RunV("tofu", "fmt", "-recursive", "../..")
+}
+
+// Fmtcheck checks if terraform files are formatted.
+func (Tofu) Fmtcheck() error {
+	return sh.RunV("tofu", "fmt", "-check", "-recursive", "../..")
+}
+
+// Lint runs tflint on the terraform files.
+func (Tofu) Lint() error {
+	owner := getOwner()
+
+	configPath, err := filepath.Abs("../../.tflint.hcl")
+	if err != nil {
+		return err
+	}
+
+	if err := sh.RunV("tflint", "--init", "--chdir="+owner, "--config="+configPath); err != nil {
+		return err
+	}
+
+	return sh.RunV("tflint", "--chdir="+owner, "--config="+configPath)
 }

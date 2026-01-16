@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        component:
+          - name: repositories
+            owner: monkescience
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - uses: opentofu/setup-opentofu@v1
+
+      - uses: terraform-linters/setup-tflint@v4
+
+      - name: Format check
+        uses: magefile/mage-action@v3
+        with:
+          args: tofu:fmtcheck
+          workdir: components/${{ matrix.component.name }}
+
+      - name: Validate
+        uses: magefile/mage-action@v3
+        with:
+          args: tofu:validate
+          workdir: components/${{ matrix.component.name }}
+        env:
+          OWNER: ${{ matrix.component.owner }}
+
+      - name: Lint
+        uses: magefile/mage-action@v3
+        with:
+          args: tofu:lint
+          workdir: components/${{ matrix.component.name }}
+        env:
+          OWNER: ${{ matrix.component.owner }}
