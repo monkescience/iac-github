@@ -4,8 +4,8 @@
 *terraform.tfstate*
 *terraform.tfplan*
 
-# Exception: github-repos state (no secrets)
-!components/github-repos/**/terraform.tfstate
+# Exception: repositories state (no secrets)
+!components/repositories/**/terraform.tfstate
 
 # IntelliJ IDEA
 .idea
