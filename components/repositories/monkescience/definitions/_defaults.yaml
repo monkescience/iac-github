@@ -31,7 +31,6 @@ branch_protection:
   required_status_checks: []
   strict_required_status_checks: false
 
-enable_branch_protection: true
 enable_branch_ruleset: true
 enable_conventional_commits_ruleset: true
 enable_branch_naming_ruleset: true

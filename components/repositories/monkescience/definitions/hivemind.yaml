@@ -1,8 +1,0 @@
-visibility: public
-
-enable_branch_protection: false
-
-branch_protection:
-  required_status_checks:
-    - test
-    - lint

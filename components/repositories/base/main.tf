@@ -63,27 +63,6 @@ resource "github_branch_default" "default_branch" {
   branch     = each.value.default_branch
 }
 
-resource "github_branch_protection" "default_branch" {
-  for_each = { for k, v in local.repositories : k => v if v.enable_branch_protection }
-
-  repository_id = github_repository.repository[each.key].node_id
-  pattern       = each.value.default_branch
-
-  required_pull_request_reviews {
-    required_approving_review_count = each.value.branch_protection.required_approving_review_count
-    dismiss_stale_reviews           = true
-    require_code_owner_reviews      = false
-    require_last_push_approval      = false
-  }
-
-  enforce_admins                  = false
-  required_linear_history         = true
-  require_conversation_resolution = true
-  require_signed_commits          = false
-  allows_force_pushes             = false
-  allows_deletions                = false
-}
-
 resource "github_repository_ruleset" "branch_protection" {
   for_each = { for k, v in local.repositories : k => v if v.enable_branch_ruleset }
 
